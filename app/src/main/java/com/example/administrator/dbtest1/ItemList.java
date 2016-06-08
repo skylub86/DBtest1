@@ -65,8 +65,6 @@ public class ItemList extends AppCompatActivity {
         }
         cursor.close();
 
-
-
         MyAdapter adapter = new MyAdapter(this, R.layout.itemlist, armDrink);
         listView=(ListView)findViewById(R.id.listView2);
         listView.setAdapter(adapter);
@@ -107,41 +105,49 @@ class MyAdapter extends BaseAdapter {
     public long getItemId(int position){
         return position;
     }
-//    class ViewHolder{
-//        ImageView imgVH;
-//        TextView nameVH;
-//        TextView textVH;
-//    }
+    private class ViewHolder{
+        public ImageView imgVH;
+        public TextView nameVH;
+        public TextView textVH;
+    }
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Log.v("확인","겟뷰");
 
-        if(convertView==null){
-            convertView=inflater.inflate(ct,parent,false);
-//            itemLayout = inflater.inflate(R.layout.item_list_view,null);
-//            viewHolder = new ViewHolder();
-//            viewHolder.imgVH = (ImageView) itemLayout.findViewById(R.id.imageView2);
-//            viewHolder.nameVH = (TextView) itemLayout.findViewById(R.id.tv1);
-//            viewHolder.textVH = (TextView) itemLayout.findViewById(R.id.tv2);
-//            itemLayout.setTag(viewHolder);
-        }
+        ViewHolder viewHolder = null;
+//        if(convertView==null){
+//            convertView=inflater.inflate(ct,parent,false);
+//
+//        }
+        if(convertView==null) {
+            convertView = inflater.inflate(R.layout.item_list_view, null);
+            viewHolder = new ViewHolder();
+            viewHolder.imgVH = (ImageView) convertView.findViewById(R.id.imageView2);
+            viewHolder.nameVH = (TextView) convertView.findViewById(R.id.tv1);
+            viewHolder.textVH = (TextView) convertView.findViewById(R.id.tv2);
 
+            convertView.setTag(viewHolder);
+        }else{
+            viewHolder = (ViewHolder)convertView.getTag();
+        }
         //Bitmap 1/4 resize
-        ImageView imgView=(ImageView)convertView.findViewById(R.id.imageView2);
+//        ImageView imgView=(ImageView)convertView.findViewById(R.id.imageView2);
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inSampleSize=2;
         Bitmap selectedImage = BitmapFactory.decodeFile(li.get(position).cImage,options);
         Bitmap resized = Bitmap.createScaledBitmap(selectedImage, selectedImage.getWidth(),selectedImage.getHeight(),true );
 
 
-        imgView.setImageBitmap(resized);
+        viewHolder.imgVH.setImageBitmap(resized);
+        viewHolder.nameVH.setText(li.get(position).name);
+        viewHolder.textVH.setText(li.get(position).cont);
 
 
-        TextView txt1 = (TextView)convertView.findViewById(R.id.tv1);
-        TextView txt2= (TextView)convertView.findViewById(R.id.tv2);
-
-        txt1.setText(li.get(position).name);
-        txt2.setText(li.get(position).cont);
+//        TextView txt1 = (TextView)convertView.findViewById(R.id.tv1);
+//        TextView txt2= (TextView)convertView.findViewById(R.id.tv2);
+//
+//        txt1.setText(li.get(position).name);
+//        txt2.setText(li.get(position).cont);
 
         return convertView;
     }
