@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.ActionMenuView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -74,7 +75,8 @@ public class MainActivity extends AppCompatActivity {
 
 //                db=helper.getReadableDatabase();
 
-                db.execSQL("INSERT INTO Drink VALUES (null,'"+name_str+"','"+ed1+"','"+ed2+"');" );
+                db.execSQL("INSERT INTO Drink VALUES(null,'"+name_str+"','"+ed1+"','"+ed2+"');" );
+
 //                armDrink = new ArrayList<mDrink>();
 //                mDrink mdrink;
 //                mdrink = new mDrink("abcdef",ed1,ed2);
@@ -90,19 +92,19 @@ public class MainActivity extends AppCompatActivity {
 //                mDrink mdrink;
 //                mdrink= new mDrink(name_str,ed1,ed2);
 
-
+                Intent i = new Intent(MainActivity.this, ItemList.class);
+                startActivity(i);
             }
+
         });
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-
+            //목록조회 버튼
+                Intent i = new Intent(MainActivity.this, ItemList.class);
+                startActivity(i);
             }
 
-//                MyAdapter adapter = new MyAdapter(this, R.layout.itemlist, );
-//                listView=(ListView)findViewById(R.id.listView);
-//                listView.setAdapter(adapter);
 
 
 
@@ -158,58 +160,60 @@ public class MainActivity extends AppCompatActivity {
 
 
 }
-
-class MyAdapter extends BaseAdapter{
-    Context con;
-    int resource;
-    ArrayList<mDrink> li;
-    LayoutInflater inflater;
-    int ct;
-    MyAdapter(Context context, int act, ArrayList<mDrink> ali) {
-        con = context;
-        ct = act;
-        li = ali;
-        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        Log.v("생성자확인", "콜");
-    }
-
-
-
-    @Override
-    public int getCount(){
-        Log.v("어댑터","카운터값"+li.size());
-        return li.size();
-
-    }
-    @Override
-    public Object getItem(int position){
-
-        return li.get(position).name;
-    }
-
-    @Override
-    public long getItemId(int position){
-        return position;
-    }
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        Log.v("확인","겟뷰");
-        if(convertView==null){
-            convertView=inflater.inflate(ct, parent, false);
-        }
-
-//        ImageView img = (ImageView) convertView.findViewById(R.id.imageView);
-//        img.setImageResource(li.get(position).cImage);
 //
-//        TextView txt1 = (TextView)convertView.findViewById(R.id.textView1);
-//        txt1.setText(li.get(position).name);
-//        TextView txt2= (TextView)convertView.findViewById(R.id.textView2);
-//        txt2.setText(li.get(position).cont);
-
-        return convertView;
-    }
-
-}
+//class MyAdapter extends BaseAdapter{
+//    Context con;
+//    int resource;
+//    ArrayList<mDrink> li;
+//    LayoutInflater inflater;
+//    int ct;
+//    View.OnClickListener oc;
+//    MyAdapter(Context context, int act, ArrayList<mDrink> ali) {
+//        con = context;
+//        ct = act;
+//        li = ali;
+//        inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//        Log.v("생성자확인", "콜");
+//    }
+//
+//
+//
+//
+//    @Override
+//    public int getCount(){
+//        Log.v("어댑터","카운터값"+li.size());
+//        return li.size();
+//
+//    }
+//    @Override
+//    public Object getItem(int position){
+//
+//        return li.get(position).name;
+//    }
+//
+//    @Override
+//    public long getItemId(int position){
+//        return position;
+//    }
+//    @Override
+//    public View getView(int position, View convertView, ViewGroup parent) {
+//        Log.v("확인","겟뷰");
+//        if(convertView==null){
+//            convertView=inflater.inflate(ct, parent, false);
+//        }
+//
+////        ImageView img = (ImageView) convertView.findViewById(R.id.imageView);
+////        img.setImageResource(li.get(position).cImage);
+////
+////        TextView txt1 = (TextView)convertView.findViewById(R.id.textView1);
+////        txt1.setText(li.get(position).name);
+////        TextView txt2= (TextView)convertView.findViewById(R.id.textView2);
+////        txt2.setText(li.get(position).cont);
+//
+//        return convertView;
+//    }
+//
+//}
 
 
 
