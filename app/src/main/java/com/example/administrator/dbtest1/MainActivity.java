@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                 db.execSQL("INSERT INTO Drink VALUES(null,'" + name_str + "','" + ed1 + "','" + ed2 + "');");
-                Log.e("이미지경로:",name_str);
+//                Log.e("이미지경로:",name_str);
 
 //                armDrink = new ArrayList<mDrink>();
 //                mDrink mdrink;
