@@ -5,19 +5,70 @@ package com.example.administrator.dbtest1;
  */
 
 import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
 
 
+public class ItemList extends AppCompatActivity {
+    SQLiteDatabase db;
+    ListView listView;
+    DBHelper dbHelper;
+    BitmapFactory options;
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        db = openOrCreateDatabase("menu",MODE_PRIVATE, null);
+        dbHelper=new DBHelper(this);
+
+        db=dbHelper.getWritableDatabase();
+        setContentView(R.layout.item_list_view);
+
+        String img, name, text;
+        ArrayList<mDrink> armDrink;
+        armDrink = new ArrayList<mDrink>();
+        mDrink mdrink;
+
+        String sql="SELECT * FROM Drink order by _id DESC;";
+        //DB에서 불러온 데이터를 어댑터로 리스트에 꽂기
+        Cursor cursor = db.rawQuery(sql,null);
+        while(cursor.moveToNext()){
+            img=cursor.getString(1);
+            name=cursor.getString(2);
+            text=cursor.getString(3);
+            mdrink=new mDrink(img,name,text);
+            armDrink.add(mdrink);
+            Log.e("이미지: ", img);
+            Log.e("이름: ", name);
+            Log.e("내용: ", text);
+
+
+        }
+        cursor.close();
+
+
+
+        MyAdapter adapter = new MyAdapter(this, R.layout.itemlist, armDrink);
+        listView=(ListView)findViewById(R.id.listView2);
+        listView.setAdapter(adapter);
+
+
+    }
+
+}
 class MyAdapter extends BaseAdapter {
 
     Context con;
