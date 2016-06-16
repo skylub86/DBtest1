@@ -12,7 +12,7 @@ import android.provider.SyncStateContract;
 
 public class DBHelper extends SQLiteOpenHelper {
     public DBHelper(Context context) {
-        super(context, "test4.db", null, 1);
+        super(context, "test5.db", null, 1);
     }
     public void onCreate(SQLiteDatabase db){
         db.execSQL("CREATE TABLE Drink(_id INTEGER PRIMARY KEY AUTOINCREMENT,"+"Image TEXT, name TEXT, price INTEGER);");

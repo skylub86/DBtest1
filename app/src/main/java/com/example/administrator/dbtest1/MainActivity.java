@@ -7,6 +7,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Message;
+import android.provider.ContactsContract;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -23,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,13 +36,15 @@ public class MainActivity extends AppCompatActivity {
     SQLiteDatabase db;
     Cursor cursor;
     Dao dao;
+    Uri uri;
     private String name_str;
     private Button btn1, btn2,btn3;
     private View view1,view2,view3;
     private String ed1,ed2;
     ArrayList<mDrink> armDrink;
     ListView listView;
-
+    Handler mHandler = new Handler();
+    MyAdapter adapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
         btn2=(Button)findViewById(R.id.button2);
         btn3=(Button)findViewById(R.id.button3);
 //        EditText et1 =(EditText)findViewByID(R.id.editText);   에디트 텍스트 값받아오기
+
+
+
+
+        //사진 불러오기 버튼
         btn3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -60,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+//        BackThread thread = new BackThread();
+//        thread.setDaemon(true);
+//        thread.start();
+        //등록버튼
         btn1.setOnClickListener(new View.OnClickListener(){
 
             @Override
@@ -75,7 +90,12 @@ public class MainActivity extends AppCompatActivity {
 
 //                db=helper.getReadableDatabase();
 
-                db.execSQL("INSERT INTO Drink VALUES(null,'"+name_str+"','"+ed1+"','"+ed2+"');" );
+
+                db.execSQL("INSERT INTO Drink VALUES(null,'" + name_str + "','" + ed1 + "','" + ed2 + "');");
+
+
+//                uri = Uri.fromFile(new File(name_str));       //uri 경로 따기
+//                image.setImageURI(uri);
 
 //                armDrink = new ArrayList<mDrink>();
 //                mDrink mdrink;
@@ -97,10 +117,11 @@ public class MainActivity extends AppCompatActivity {
             }
 
         });
+        //리스트 조회버튼
         btn2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-            //목록조회 버튼
+                //목록조회 버튼
                 Intent i = new Intent(MainActivity.this, ItemList.class);
                 startActivity(i);
             }
@@ -112,6 +133,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+
 
     // 실제 전체 이미지 주소 가져오기
     @Override
