@@ -2,6 +2,7 @@ package com.example.administrator.dbtest1;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -11,6 +12,8 @@ import android.os.Handler;
 import android.os.Message;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.ActionMenuView;
@@ -26,35 +29,51 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.utils.DiskCacheUtils;
+import com.nostra13.universalimageloader.utils.MemoryCacheUtils;
+
 import java.io.File;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.jar.Manifest;
 
 public class MainActivity extends AppCompatActivity {
-    DBHelper helper;
+    DBHelper dbHelper;
     SQLiteDatabase db;
-    Cursor cursor;
-    Dao dao;
-    Uri uri;
     private String name_str;
-    private Button btn1, btn2,btn3;
-    private View view1,view2,view3;
-    private String ed1,ed2;
-    ArrayList<mDrink> armDrink;
-    ListView listView;
+    private Button btn1, btn2, btn3;
+    private String ed1, ed2;
     Handler mHandler = new Handler();
+    ListView listView;
     MyAdapter adapter;
+//    private DisplayImageOptions options = null;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        dbHelper = new DBHelper(this);
+        db = openOrCreateDatabase("Drink", MODE_PRIVATE, null);
+        db=dbHelper.getWritableDatabase();
         setContentView(R.layout.activity_main);
+//        if(ContextCompat.checkSelfPermission(this,Manifest.permission.READ_EXTERNAL_STORAGE)!= PackageManager.PERMISSION_GRANTED){
+//            if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.READ_EXTERNAL_STORAGE)){
+//
+//            }
+//        }
 
-        helper=new DBHelper(this);
-        db = openOrCreateDatabase("Drink",MODE_PRIVATE, null);
-        btn1=(Button)findViewById(R.id.button);
-        btn2=(Button)findViewById(R.id.button2);
-        btn3=(Button)findViewById(R.id.button3);
+
+//        this.initImageLoader(getApplicationContext());
+
+
+        btn1 = (Button) findViewById(R.id.button);
+        btn2 = (Button) findViewById(R.id.button2);
+        btn3 = (Button) findViewById(R.id.button3);
 //        EditText et1 =(EditText)findViewByID(R.id.editText);   에디트 텍스트 값받아오기
 
 
@@ -67,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(Intent.ACTION_PICK);
                 intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
                 intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult( intent, 100 );
+                startActivityForResult(intent, 100);
             }
         });
 
@@ -75,16 +94,16 @@ public class MainActivity extends AppCompatActivity {
 //        thread.setDaemon(true);
 //        thread.start();
         //등록버튼
-        btn1.setOnClickListener(new View.OnClickListener(){
+        btn1.setOnClickListener(new View.OnClickListener() {
 
             @Override
-            public void onClick(View v){
+            public void onClick(View v) {
 
-                EditText et1 =(EditText)findViewById(R.id.editText);
-                EditText et2 =(EditText)findViewById(R.id.editText2);
-                ed1= et1.getText().toString();
-                ed2= et2.getText().toString();
-                db=helper.getReadableDatabase();
+                EditText et1 = (EditText) findViewById(R.id.editText);
+                EditText et2 = (EditText) findViewById(R.id.editText2);
+                ed1 = et1.getText().toString();
+                ed2 = et2.getText().toString();
+                db = dbHelper.getReadableDatabase();
 
 //                db = openOrCreateDatabase("Drink",MODE_PRIVATE, null);
 
@@ -127,12 +146,114 @@ public class MainActivity extends AppCompatActivity {
             }
 
 
-
-
-
         });
 
     }
+
+                /// UIL 사용
+//    private void initImageLoader(Context context)
+//
+//    {
+//
+//        // This configuration tuning is custom. You can tune every option, you may tune some of them,
+//
+//        // or you can create default configuration by
+//
+//        //  ImageLoaderConfiguration.createDefault(this);
+//
+//        // method.
+//
+//        ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(context)
+//
+//                .threadPriority(Thread.NORM_PRIORITY - 2)
+//
+//                .denyCacheImageMultipleSizesInMemory()
+//
+//                .diskCacheFileNameGenerator(new Md5FileNameGenerator())
+//
+//                .diskCacheSize(50 * 1024 * 1024) // 50 Mb
+//
+//                .tasksProcessingOrder(QueueProcessingType.FIFO)
+//
+////			.writeDebugLogs() // Remove for release app
+//
+//                .build();
+//
+//
+//
+//        ImageLoader.getInstance().init(config);
+//
+//    }
+//
+//
+//
+//
+//    public DisplayImageOptions getDisplayImageOptions()
+//
+//    {
+//
+//        if(this.options == null)
+//
+//        {
+//
+//            this.options = new DisplayImageOptions.Builder()
+//
+//                    .showImageOnLoading(R.drawable.no_image)
+//
+//                    .showImageForEmptyUri(R.drawable.no_detail_img)
+//
+//                    .showImageOnFail(R.drawable.error_1)
+//
+////			.resetViewBeforeLoading(false)
+//
+////			.delayBeforeLoading(1000)
+//
+////			.preProcessor(...)
+//
+////			.postProcessor(...)
+//
+////			.extraForDownloader(...)
+//
+////			.imageScaleType(ImageScaleType.IN_SAMPLE_POWER_OF_2)
+//
+////			.bitmapConfig(Bitmap.Config.ARGB_8888)
+//
+////			.decodingOptions(...)
+//
+////			.displayer(new SimpleBitmapDisplayer())
+//
+////			.handler(new Handler())
+//
+//                    .cacheInMemory(true)
+//
+//                    .cacheOnDisk(true)
+//
+//                    .considerExifParams(true)
+//
+//                    .build();
+//
+//        }
+//
+//
+//
+//        return this.options;
+//
+//    }
+//
+//
+//
+//    public void removeFromCache(String imageUri)
+//
+//    {
+//
+//        DiskCacheUtils.removeFromCache(imageUri, ImageLoader.getInstance().getDiskCache());
+//
+//
+//
+//        MemoryCacheUtils.removeFromCache(imageUri, ImageLoader.getInstance().getMemoryCache());
+//
+//    }
+
 
 
     // 실제 전체 이미지 주소 가져오기
